@@ -1,7 +1,8 @@
 from flask import Flask, render_template
+from form import RegistrationForm, LoginForm
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = '9ada898c7ee83b8c36da6d8affdcbf2a'
 
 users = [
     {
@@ -22,8 +23,14 @@ users = [
 ]
 
 @app.route("/")
-def add_user():
-    return render_template('add_user.html')
+def register():
+    registration_form = RegistrationForm()
+    return render_template('register.html', title = 'Register User', form = registration_form)
+
+@app.route("/login")
+def login():
+    login_form = LoginForm()
+    return render_template('login.html', title = 'Register User', form = login_form)
 
 @app.route("/list")
 def list_users():
