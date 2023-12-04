@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect
 from form import RegistrationForm, LoginForm
 
 app = Flask(__name__)
@@ -22,17 +22,21 @@ users = [
     }
 ]
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     registration_form = RegistrationForm()
+    if registration_form.validate_on_submit():
+        flash(f'Account created with { registration_form.data }', class='success')
+        return redirect(url_for('login'))
     return render_template('register.html', title = 'Register User', form = registration_form)
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
     return render_template('login.html', title = 'Register User', form = login_form)
 
-@app.route("/list")
+@app.route("/list",  methods=['GET'])
 def list_users():
     return render_template('list_users.html', users=users)
 
