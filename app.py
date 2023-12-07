@@ -33,6 +33,12 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
+    if login_form.validate_on_submit():
+        if login_form.email.data == "natasha.test@gmail.com" and login_form.password.data == "Test@123":
+            flash('the form should be submitted', 'success')
+            return redirect(url_for("list_users"))
+        else:
+            flash('something wrong', 'error')
     return render_template('login.html', title = 'Register User', form = login_form)
 
 @app.route("/list",  methods=['GET'])
