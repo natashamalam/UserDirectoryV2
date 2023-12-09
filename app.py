@@ -1,8 +1,38 @@
 from flask import Flask, render_template, flash, redirect, url_for
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 from form import RegistrationForm, LoginForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '9ada898c7ee83b8c36da6d8affdcbf2a'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///profiles.db'
+
+db = SQLAlchemy(app)
+
+class Candidate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(20), nullable=True)
+    last_name = db.Column(db.String(20), nullable=True)
+    email = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(60), nullable=False)
+    image = db.Column(db.String(20), nullable=True)
+    profile = db.relationship('Profile', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User ='{self.email}'"
+
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(20), nullable=False)
+    skill = db.Column(db.Text, nullable=True)
+    experience = db.Column(db.Text, nullable=True)
+    certification = db.Column(db.Text, nullable=True)
+    last_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+
+
+    def __repr__(self):
+        return f"User ='{self.title}', '{self.last_updated}' "
 
 users = [
     {
