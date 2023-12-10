@@ -3,6 +3,19 @@
 {% block content %}
 <div class="container w-75 p-3 bg-dark-subtle">
     <div class="row">
+        <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}    
+        </div>
+    </div>
+    <div class="row">
         <div class="col"></div>
         <div class="col-8">
             <form method="post" action="" name="register">
